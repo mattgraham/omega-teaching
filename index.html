@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>audio.js</title>
+    <meta name="viewport" content="initial-scale = 0.65, maximum-scale = 1.0" />
+    <script src="js/jquery.js"></script>
+    <script src="js/audio.js"></script>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+      $(function() {
+        // Setup the player to autoplay the next track
+        var a = audiojs.createAll({
+          trackEnded: function() {
+            var next = $('ol li.playing').next();
+            if (!next.length) next = $('ol li').first();
+            next.addClass('playing').siblings().removeClass('playing');
+            audio.load($('a', next).attr('data-src'));
+            audio.play();
+          }
+        });
+
+        // Load in the first track
+        var audio = a[0];
+            first = $('ol a').attr('data-src');
+        $('ol li').first().addClass('playing');
+        audio.load(first);
+
+        // Load in a track on click
+        $('ol li').click(function(e) {
+          e.preventDefault();
+          $(this).addClass('playing').siblings().removeClass('playing');
+          audio.load($('a', this).attr('data-src'));
+          audio.play();
+        });
+        // Keyboard shortcuts
+        $(document).keydown(function(e) {
+          var unicode = e.charCode ? e.charCode : e.keyCode;
+             // right arrow
+          if (unicode == 39) {
+            var next = $('li.playing').next();
+            if (!next.length) next = $('ol li').first();
+            next.click();
+            // back arrow
+          } else if (unicode == 37) {
+            var prev = $('li.playing').prev();
+            if (!prev.length) prev = $('ol li').last();
+            prev.click();
+            // spacebar
+          } else if (unicode == 32) {
+            audio.playPause();
+          }
+        })
+      });
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>Omega Course Study Guide</h1>
+      <audio preload></audio>
+      <ol>
+        <li><a href="#" data-src="/media/Omega_000_Intro.MP3">Intro</a></li>
+        <li><a href="#" data-src="/media/Omega_001_Positive Trends, People and Events in the End Times.MP3">Positive Trends, People and Events in the End Times</a></li>
+        <li><a href="#" data-src="/media/Omega_002_Negative Trends, People and Events in the End Times.MP3">Negative Trends, People and Events in the End Times</a></li>
+        <li><a href="#" data-src="/media/Omega_003_The Millennial Kingdom of Jesus.MP3">The Millennial Kingdom of Jesus</a></li>
+        <li><a href="#" data-src="/media/Omega_004_Armageddon, the Rapture and the Second Comming Procession.MP3">Armageddon, the Rapture and the Second Comming Procession</a></li>
+      </ol>
+    </div>
+
+    <div id="shortcuts">
+      <div>
+        <h1>Keyboard shortcuts:</h1>
+        <p><em>&rarr;</em> Next track</p>
+        <p><em>&larr;</em> Previous track</p>
+        <p><em>Space</em> Play/pause</p>
+      </div>
+    </div>
+  </body>
+</html>
